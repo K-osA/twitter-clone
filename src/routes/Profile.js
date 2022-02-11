@@ -1,12 +1,12 @@
 import { authService, dbService } from "fbase";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const Profile = ({ refreshUser, userObj }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
   const onLogOutClick = async () => {
     await authService.signOut();
-    history.push("/");
+    navigate("/");
   };
   const getMyTweets = async () => {
     const tweets = await dbService
@@ -36,7 +36,7 @@ const Profile = ({ refreshUser, userObj }) => {
     }
   };
   return (
-    <div className="container">
+    <div className="container top-container">
       <form onSubmit={onSubmit} className="profileForm">
         <input
           onChange={onChange}

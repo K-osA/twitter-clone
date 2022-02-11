@@ -36,7 +36,14 @@ form {
   color: white;
   opacity: 0.9;
 }
-
+.top-container {
+  max-width: 890;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+}
 .container {
   width: 100%;
   max-width: 320px;
