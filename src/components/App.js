@@ -8,11 +8,29 @@ function App() {
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       if (user) {
-        setUserObj({
-          displayName: user.displayName,
-          uid: user.uid,
-          updateProfile: (args) => user.updateProfile(args),
-        });
+        if (user.displayName === null) {
+          const tempDisplayName = user.email.substring(
+            0,
+            user.email.lastIndexOf("@")
+          );
+          user
+            .updateProfile({
+              displayName: `${tempDisplayName}`,
+            })
+            .then(function () {
+              setUserObj({
+                displayName: user.displayName,
+                uid: user.uid,
+                updateProfile: (args) => user.updateProfile(args),
+              });
+            });
+        } else {
+          setUserObj({
+            displayName: user.displayName,
+            uid: user.uid,
+            updateProfile: (args) => user.updateProfile(args),
+          });
+        }
       } else {
         setUserObj(null);
       }
