@@ -1,4 +1,6 @@
 import { dbService, storageService } from "fbase";
+import { addDoc, collection } from "firebase/firestore";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,19 +16,21 @@ const TweetFactory = ({ userObj }) => {
     event.preventDefault();
     let attachmentUrl = "";
     if (attachment !== "") {
-      const attachmentRef = storageService
-        .ref()
-        .child(`${userObj.uid}/${uuidv4()}`);
-      const response = await attachmentRef.putString(attachment, "data_url");
-      attachmentUrl = await response.ref.getDownloadURL();
+      const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+      const response = await uploadString(
+        attachmentRef,
+        attachment,
+        "data_url"
+      );
+      attachmentUrl = await getDownloadURL(response.ref);
     }
-    const tweetObj = {
+    await addDoc(collection(dbService, "tweets"), {
       text: tweet,
       createdAt: Date.now(),
       creatorId: userObj.uid,
       attachmentUrl,
-    };
-    await dbService.collection("tweets").add(tweetObj);
+    });
+
     setTweet("");
     setAttachment("");
   };

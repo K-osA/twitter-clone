@@ -1,13 +1,15 @@
-import { authService, dbService } from "fbase";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { authService } from "fbase";
+import { signOut, updateProfile } from "firebase/auth";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 const Profile = ({ refreshUser, userObj }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
   const onLogOutClick = async () => {
-    await authService.signOut();
-    history.push("/");
+    await signOut(authService);
+    navigate("/");
   };
+  /*
   const getMyTweets = async () => {
     const tweets = await dbService
       .collection("tweets")
@@ -20,6 +22,7 @@ const Profile = ({ refreshUser, userObj }) => {
     getMyTweets();
     // eslint-disable-next-line
   }, []);
+  */
   const onChange = (event) => {
     const {
       target: { value },
@@ -29,14 +32,14 @@ const Profile = ({ refreshUser, userObj }) => {
   const onSubmit = async (event) => {
     event.preventDefault();
     if (userObj.displayName !== newDisplayName) {
-      await userObj.updateProfile({
+      await updateProfile(authService.currentUser, {
         displayName: newDisplayName,
       });
       refreshUser();
     }
   };
   return (
-    <div className="container">
+    <div className="container top-container">
       <form onSubmit={onSubmit} className="profileForm">
         <input
           onChange={onChange}
