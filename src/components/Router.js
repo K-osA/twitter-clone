@@ -14,14 +14,14 @@ const AppRouter = ({ refreshUser, isLoggedIn, userObj }) => {
           <>
             <Route path="/" element={<Home userObj={userObj} />} />
             <Route
-              path="profile/*"
+              path="profile"
               element={<Profile userObj={userObj} refreshUser={refreshUser} />}
             />
           </>
         ) : (
-          <React.Fragment>
+          <>
             <Route path="/" element={<Auth />} />
-          </React.Fragment>
+          </>
         )}
       </Routes>
     </HashRouter>

@@ -1,4 +1,10 @@
-import { authService, firebaseInstance } from "fbase";
+import { authService } from "fbase";
+import {
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  TwitterAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,13 +19,13 @@ const SocialAuthForm = () => {
     } = event;
     let provider;
     if (name === "google") {
-      provider = new firebaseInstance.auth.GoogleAuthProvider();
+      provider = new GoogleAuthProvider();
     } else if (name === "github") {
-      provider = new firebaseInstance.auth.GithubAuthProvider();
+      provider = new GithubAuthProvider();
     } else if (name === "twitter") {
-      provider = new firebaseInstance.auth.TwitterAuthProvider();
+      provider = new TwitterAuthProvider();
     }
-    await authService.signInWithPopup(provider);
+    await signInWithPopup(authService, provider);
   };
   return (
     <div className="authBtns">

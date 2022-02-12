@@ -1,4 +1,6 @@
 import { dbService, storageService } from "fbase";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
@@ -6,20 +8,19 @@ import { faTrash, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 const Tweet = ({ tweetObj, isOwner }) => {
   const [editing, setEditing] = useState(false);
   const [newTweet, setNewTweet] = useState(tweetObj.text);
+  const tweetTextRef = doc(dbService, "tweets", `${tweetObj.id}`);
   const onDeleteClick = async () => {
     const ok = window.confirm("Are you sre you want to delete this tweet?");
     if (ok) {
-      await dbService.doc(`tweets/${tweetObj.id}`).delete();
+      await deleteDoc(tweetTextRef);
       if (tweetObj.attachmentUrl !== "")
-        await storageService.refFromURL(tweetObj.attachmentUrl).delete();
+        await deleteObject(ref(storageService, tweetObj.attachmentUrl));
     }
   };
   const toggleEditing = () => setEditing((prev) => !prev);
   const onSubmit = async (event) => {
     event.preventDefault();
-    await dbService.doc(`tweets/${tweetObj.id}`).update({
-      text: newTweet,
-    });
+    await updateDoc(tweetTextRef, { text: newTweet });
     setEditing(false);
   };
   const onChange = (event) => {

@@ -14,7 +14,7 @@ const Navigation = ({ userObj }) => (
       </li>
       <li>
         <Link
-          to="/profile"
+          to="profile"
           style={{
             marginLeft: 10,
             display: "flex",
